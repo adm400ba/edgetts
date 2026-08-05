@@ -1,12 +1,13 @@
 {
-  "name": "edge-tts-api",
+  "name": "api-tts",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "tsx index.js"
   },
   "dependencies": {
-    "edge-tts": "^1.0.1",
-    "express": "^4.21.2"
+    "edge-tts": "latest",
+    "express": "latest",
+    "tsx": "latest"
   }
 }
