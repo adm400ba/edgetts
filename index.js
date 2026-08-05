@@ -1,38 +1,29 @@
-const express = require("express");
-const { tts } = require("edge-tts");
+import express from "express";
+import { EdgeTTS } from "edge-tts";
 
 const app = express();
 
 app.use(express.json());
 
-app.post("/tts", async (req, res) => {
-    try {
-        const { text } = req.body;
+app.post("/gerar-audio", async (req, res) => {
+  const { texto } = req.body;
 
-        if (!text) {
-            return res.status(400).json({
-                error: "Texto não informado"
-            });
-        }
+  if (!texto) {
+    return res.status(400).json({ error: "Texto não informado" });
+  }
 
-        const audio = await tts(text, {
-            voice: "pt-BR-AntonioNeural"
-        });
+  try {
+    const tts = new EdgeTTS({
+      voice: "pt-BR-FranciscaNeural"
+    });
 
-        res.setHeader("Content-Type", "audio/mpeg");
-        res.send(Buffer.from(audio));
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            error: err.message
-        });
-    }
+    const audioBuffer = await tts.synthesize(texto);
+
+    res.setHeader("Content-Type", "audio/mpeg");
+    return res.send(audioBuffer);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro interno no servidor" });
+  }
 });
 
-app.get("/", (req, res) => {
-    res.send("API online");
-});
-
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Servidor iniciado");
-});
+app.listen(3000, "0.0.0.0");
